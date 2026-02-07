@@ -1,3 +1,9 @@
+/*
+ * P760 Arduino Library
+ * Copyright (c) 2026 V7 Idea Technology Ltd.
+ * Licensed under the MIT License.
+ */
+
 #pragma once
 
 #include <Arduino.h>
