@@ -14,3 +14,6 @@ Copy this folder into Arduino `libraries/` or install via git.
 
 ## Example
 See `examples/BasicRead/BasicRead.ino`.
+
+## License
+This project is licensed under the MIT License.
