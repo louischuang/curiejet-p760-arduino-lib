@@ -131,11 +131,11 @@ bool P760::readPressureFrom12B(uint32_t& pressure) {
   // However, it doesn't clearly state the starting register for that 12-byte array.
   // We conservatively start at 0x00 (PM1_H) to test the "single burst frame" hypothesis.
   uint8_t b[12];
-  if (!readReg(0x00, b, sizeof(b))) return false;
+  if (!readReg(0x20, b, sizeof(b))) return false;
 
   pressure =
-      (static_cast<uint32_t>(b[9])  << 16) |
-      (static_cast<uint32_t>(b[10]) << 8)  |
+      (static_cast<uint32_t>(b[9])  << 16) +
+      (static_cast<uint32_t>(b[10]) << 8)  +
       (static_cast<uint32_t>(b[11]) << 0);
   return true;
 }
