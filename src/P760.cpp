@@ -81,8 +81,16 @@ bool P760::readPM(uint16_t& pm1, uint16_t& pm25, uint16_t& pm10) {
   return true;
 }
 
+bool P760::readPMRaw(uint8_t out6[6]) {
+  return readReg(REG_PM1_H, out6, 6);
+}
+
 bool P760::setMode(Mode mode) {
   return writeRegU8(REG_MODE, static_cast<uint8_t>(mode));
+}
+
+bool P760::readModeRaw(uint8_t& value) {
+  return readReg(REG_MODE, &value, 1);
 }
 
 bool P760::readMode(Mode& mode) {
@@ -99,12 +107,39 @@ bool P760::readIAQ(uint16_t& iaq) {
   return true;
 }
 
+bool P760::readEnvBlock(uint8_t out8[8]) {
+  return readReg(REG_IAQ_H, out8, 8);
+}
+
 bool P760::boschEnable(bool on) {
   return writeRegU8(REG_BOSCH_ON, on ? 0x01 : 0x00);
 }
 
+bool P760::readBoschEnableRaw(uint8_t& value) {
+  return readReg(REG_BOSCH_ON, &value, 1);
+}
+
+bool P760::readBoschEnable(bool& on) {
+  uint8_t v = 0;
+  if (!readBoschEnableRaw(v)) return false;
+  on = (v != 0x00);
+  return true;
+}
+
 bool P760::setPM25Stop(bool stop) {
   return writeRegU8(REG_PM25_STOP, stop ? 0x01 : 0x00);
+}
+
+bool P760::readPM25Stop(bool& stop) {
+  uint8_t v = 0;
+  if (!readReg(REG_PM25_STOP, &v, 1)) return false;
+  stop = (v != 0x00);
+  return true;
+}
+
+bool P760::startMeasurement(Mode mode) {
+  if (!setPM25Stop(false)) return false;
+  return setMode(mode);
 }
 
 bool P760::readFwVersion(uint8_t& ver) {

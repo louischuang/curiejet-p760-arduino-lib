@@ -29,21 +29,32 @@ public:
 
   // Read PM values (ug/m3). This does a single 6-byte burst read starting at reg 0x00.
   bool readPM(uint16_t& pm1, uint16_t& pm25, uint16_t& pm10);
+  bool readPMRaw(uint8_t out6[6]);
 
   // Mode register at 0x06 (R/W): 0=continuous, 1=60 seconds
   bool setMode(Mode mode);
   bool setModeContinuous() { return setMode(Mode::Continuous); }
   bool setModeInterval60s() { return setMode(Mode::Interval60s); }
   bool readMode(Mode& mode);
+  bool readModeRaw(uint8_t& value);
 
   // IAQ (VOC index) at 0x20 (2 bytes)
   bool readIAQ(uint16_t& iaq);
+  bool readEnvBlock(uint8_t out8[8]);
 
   // Bosch ON/OFF at 0x2E (R/W): 0x01=ON, 0x00=OFF
   bool boschEnable(bool on);
+  bool readBoschEnable(bool& on);
+  bool readBoschEnableRaw(uint8_t& value);
 
   // PM2.5 stop/start at 0xB6 (R/W): 0x01=stop, 0x00=start
   bool setPM25Stop(bool stop);
+  bool readPM25Stop(bool& stop);
+
+  // Best-effort startup helper for PM measurements:
+  // ensure PM engine is started, optionally switch mode, and allow caller
+  // to verify the resulting register state.
+  bool startMeasurement(Mode mode = Mode::Continuous);
 
   // Firmware version at 0x70 (1 byte)
   bool readFwVersion(uint8_t& ver);
